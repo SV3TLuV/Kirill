@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+
+  database:
+    container_name: Database
+    image: postgres
+    ports:
+      - "5432:5432"
+    build:
+      network: host
+    environment:
+      - POSTGRES_PASSWORD=P@ssw0rd
+    volumes:
+      - db:/var/lib/postgresql/data
+    logging:
+      driver: none
+    restart: always
+
+  api:
+    container_name: Api
+    image: api
+    build:
+      network: host
+      context: ./Api
+      dockerfile: Dockerfile
+    ports:
+      - "5050:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - database
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    logging:
+      driver: none
+    restart: always
+
+volumes:
+  db:
