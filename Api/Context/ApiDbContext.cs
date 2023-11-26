@@ -76,14 +76,7 @@ public partial class ApiDbContext : DbContext
                 .HasDefaultValueSql("nextval('\"Courses_id_seq\"'::regclass)")
                 .HasColumnName("id");
 
-            entity.HasData(new Course[]
-            {
-                new() { Id = 1 },
-                new() { Id = 2 },
-                new() { Id = 3 },
-                new() { Id = 4 },
-                new() { Id = 5 },
-            });
+            entity.HasData(new() { Id = 1 }, new() { Id = 2 }, new() { Id = 3 }, new() { Id = 4 }, new() { Id = 5 });
         });
 
         modelBuilder.Entity<Discipline>(entity =>
@@ -193,13 +186,8 @@ public partial class ApiDbContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Value).HasColumnName("value");
 
-            entity.HasData(new Mark[]
-            {
-                new() { Id = 1, Value = 5 },
-                new() { Id = 2, Value = 4 },
-                new() { Id = 3, Value = 3 },
-                new() { Id = 4, Value = 2 },
-            });
+            entity.HasData(new() { Id = 1, Value = 5 }, new() { Id = 2, Value = 4 }, new() { Id = 3, Value = 3 },
+                new() { Id = 4, Value = 2 });
         });
 
         modelBuilder.Entity<Semester>(entity =>
@@ -212,11 +200,7 @@ public partial class ApiDbContext : DbContext
                 .HasDefaultValueSql("nextval('\"Semesters_id_seq\"'::regclass)")
                 .HasColumnName("id");
 
-            entity.HasData(new Semester[]
-            {
-                new() { Id = 1 },
-                new() { Id = 2 },
-            });
+            entity.HasData(new() { Id = 1 }, new() { Id = 2 });
         });
 
         modelBuilder.Entity<Student>(entity =>
@@ -376,8 +360,8 @@ public partial class ApiDbContext : DbContext
                 .HasForeignKey(d => d.MarkId)
                 .HasConstraintName("work_mark_fk_mark");
 
-            entity.HasOne(d => d.Work).WithOne(p => p.WorkMark)
-                .HasForeignKey<WorkMark>(d => d.WorkId)
+            entity.HasOne(d => d.Work).WithMany(p => p.WorkMarks)
+                .HasForeignKey(d => d.WorkId)
                 .HasConstraintName("work_mark_fk_work");
         });
 

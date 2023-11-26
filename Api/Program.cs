@@ -31,7 +31,7 @@ void ConfigureApp(WebApplication app)
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-    
+
     app.UseRouting();
     app.UseCors(Constants.CorsName);
     //app.UseAuthentication();

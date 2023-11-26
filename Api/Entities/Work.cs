@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Api.Entities;
 
-namespace Api.Entities;
-
-public partial class Work
+public class Work
 {
     public int Id { get; set; }
 
@@ -17,7 +14,7 @@ public partial class Work
 
     public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
 
-    public virtual WorkMark? WorkMark { get; set; }
+    public virtual ICollection<WorkMark> WorkMarks { get; set; } = new List<WorkMark>();
 
     public virtual WorkType WorkType { get; set; } = null!;
 }

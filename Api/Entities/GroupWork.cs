@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Api.Entities;
 
-namespace Api.Entities;
-
-public partial class GroupWork
+public class GroupWork
 {
+    public int Id { get; set; }
+
     public int GroupId { get; set; }
 
     public int WorkId { get; set; }
@@ -14,8 +13,6 @@ public partial class GroupWork
     public int CourseId { get; set; }
 
     public int SemesterId { get; set; }
-
-    public int Id { get; set; }
 
     public virtual Course Course { get; set; } = null!;
 

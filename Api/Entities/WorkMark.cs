@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Api.Entities;
 
-namespace Api.Entities;
-
-public partial class WorkMark
+public class WorkMark
 {
     public int WorkId { get; set; }
 

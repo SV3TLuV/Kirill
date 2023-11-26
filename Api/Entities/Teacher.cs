@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Api.Entities;
 
-namespace Api.Entities;
-
-public partial class Teacher
+public class Teacher
 {
     public int Id { get; set; }
 
