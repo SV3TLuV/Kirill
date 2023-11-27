@@ -34,6 +34,7 @@
       <Folder Include="Models\GroupWorks\Commands\" />
       <Folder Include="Models\GroupWorks\Queries\" />
       <Folder Include="Models\Students\Queries\" />
+      <Folder Include="Models\Tasks\Queries\" />
       <Folder Include="Models\Users\Queries\" />
       <Folder Include="Models\Works\Queries\" />
       <Folder Include="Models\WorkTypes\Queries\" />
