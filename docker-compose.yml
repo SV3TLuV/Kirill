@@ -22,8 +22,8 @@ services:
     image: api
     build:
       network: host
-      context: ./Api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Api/Dockerfile
     ports:
       - "5050:80"
     environment:
