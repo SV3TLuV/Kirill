@@ -1,13 +1,11 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
+using Api.Models.Users;
 
-namespace Api.Models;
+namespace Api.Models.Teachers;
 
 public sealed class TeacherViewModel : IMapWith<Teacher>
 {
     public int Id { get; set; }
 
     public UserViewModel User { get; set; } = null!;
-
-    public ICollection<GroupViewModel> Groups { get; set; } = null!;
 }

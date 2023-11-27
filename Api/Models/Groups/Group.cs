@@ -1,4 +1,12 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.Courses;
+using Api.Models.Disciplines;
+using Api.Models.GroupWorks;
+using Api.Models.Semesters;
+using Api.Models.Students;
+using Api.Models.TeacherGroups;
+using Api.Models.Teachers;
+
+namespace Api.Models.Groups;
 
 public class Group
 {
@@ -22,5 +30,5 @@ public class Group
 
     public virtual ICollection<Discipline> Disciplines { get; set; } = new List<Discipline>();
 
-    public virtual ICollection<Teacher> Teachers { get; set; } = new List<Teacher>();
+    public virtual ICollection<TeacherGroup> TeacherGroups { get; set; } = new List<TeacherGroup>();
 }

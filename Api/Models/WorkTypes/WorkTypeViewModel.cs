@@ -1,7 +1,6 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
 
-namespace Api.Models;
+namespace Api.Models.WorkTypes;
 
 public sealed class WorkTypeViewModel : IMapWith<WorkType>
 {

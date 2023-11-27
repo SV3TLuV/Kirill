@@ -1,7 +1,11 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
+using Api.Models.Marks;
+using Api.Models.Students;
+using Api.Models.Tasks;
+using Api.Models.Works;
+using AutoMapper;
 
-namespace Api.Models;
+namespace Api.Models.CompletedWorks;
 
 public sealed class CompletedWorkViewModel : IMapWith<CompletedWork>
 {
@@ -16,4 +20,12 @@ public sealed class CompletedWorkViewModel : IMapWith<CompletedWork>
     public WorkViewModel Work { get; set; } = null!;
 
     public ICollection<TaskViewModel> Tasks { get; set; } = null!;
+
+    public void Map(Profile profile)
+    {
+        profile.CreateMap<CompletedWork, CompletedWorkViewModel>()
+            .ForMember(e => e.Tasks, expression =>
+                expression.MapFrom(e => e.CompletedWorkTasks
+                    .Select(e => e.Task)));
+    }
 }

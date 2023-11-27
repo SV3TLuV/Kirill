@@ -1,7 +1,8 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
+using Api.Models.Groups;
+using Api.Models.Users;
 
-namespace Api.Models;
+namespace Api.Models.Students;
 
 public sealed class StudentViewModel : IMapWith<Student>
 {

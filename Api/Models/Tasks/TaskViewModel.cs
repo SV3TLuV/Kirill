@@ -1,7 +1,6 @@
 ﻿using Api.Common.Interfaces;
-using Task = Api.Entities.Task;
 
-namespace Api.Models;
+namespace Api.Models.Tasks;
 
 public sealed class TaskViewModel : IMapWith<Task>
 {

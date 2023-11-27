@@ -1,4 +1,8 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.CompletedWorks;
+using Api.Models.Groups;
+using Api.Models.Users;
+
+namespace Api.Models.Students;
 
 public class Student
 {

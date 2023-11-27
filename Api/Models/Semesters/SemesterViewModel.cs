@@ -1,7 +1,6 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
 
-namespace Api.Models;
+namespace Api.Models.Semesters;
 
 public sealed class SemesterViewModel : IMapWith<Semester>
 {

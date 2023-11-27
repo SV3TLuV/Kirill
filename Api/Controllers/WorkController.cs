@@ -1,5 +1,6 @@
 using Api.Context;
 using Api.Models;
+using Api.Models.Works;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;

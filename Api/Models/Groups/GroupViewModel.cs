@@ -1,7 +1,9 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
+using Api.Models.Courses;
+using Api.Models.Disciplines;
+using Api.Models.Semesters;
 
-namespace Api.Models;
+namespace Api.Models.Groups;
 
 public sealed class GroupViewModel : IMapWith<Group>
 {

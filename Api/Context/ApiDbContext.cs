@@ -1,6 +1,20 @@
-﻿using Api.Entities;
+﻿using Api.Models.CompletedWorks;
+using Api.Models.CompletedWorkTasks;
+using Api.Models.Courses;
+using Api.Models.Disciplines;
+using Api.Models.Groups;
+using Api.Models.GroupWorks;
+using Api.Models.Marks;
+using Api.Models.Semesters;
+using Api.Models.Students;
+using Api.Models.TeacherGroups;
+using Api.Models.Teachers;
+using Api.Models.Users;
+using Api.Models.WorkMarks;
+using Api.Models.Works;
+using Api.Models.WorkTypes;
 using Microsoft.EntityFrameworkCore;
-using Task = Api.Entities.Task;
+using Task = Api.Models.Tasks.Task;
 
 namespace Api.Context;
 
@@ -12,6 +26,8 @@ public partial class ApiDbContext : DbContext
     }
 
     public virtual DbSet<CompletedWork> CompletedWorks { get; set; } = null!;
+
+    public virtual DbSet<CompletedWorkTask> CompletedWorkTasks { get; set; } = null!;
 
     public virtual DbSet<Course> Courses { get; set; } = null!;
 
@@ -30,6 +46,8 @@ public partial class ApiDbContext : DbContext
     public virtual DbSet<Task> Tasks { get; set; } = null!;
 
     public virtual DbSet<Teacher> Teachers { get; set; } = null!;
+
+    public virtual DbSet<TeacherGroup> TeacherGroups { get; set; } = null!;
 
     public virtual DbSet<User> Users { get; set; } = null!;
 
@@ -64,6 +82,11 @@ public partial class ApiDbContext : DbContext
             entity.HasOne(d => d.Work).WithMany(p => p.CompletedWorks)
                 .HasForeignKey(d => d.WorkId)
                 .HasConstraintName("completed_work_fk_work");
+
+            entity.HasMany(e => e.CompletedWorkTasks)
+                .WithOne(e => e.CompletedWork)
+                .HasForeignKey(e => e.CompletedWorkId)
+                .HasConstraintName("completed_work_task_fk_completed_work");
         });
 
         modelBuilder.Entity<Course>(entity =>
@@ -76,7 +99,8 @@ public partial class ApiDbContext : DbContext
                 .HasDefaultValueSql("nextval('\"Courses_id_seq\"'::regclass)")
                 .HasColumnName("id");
 
-            entity.HasData(new() { Id = 1 }, new() { Id = 2 }, new() { Id = 3 }, new() { Id = 4 }, new() { Id = 5 });
+            entity.HasData(new Course { Id = 1 }, new Course { Id = 2 }, new Course { Id = 3 }, new Course { Id = 4 },
+                new Course { Id = 5 });
         });
 
         modelBuilder.Entity<Discipline>(entity =>
@@ -120,6 +144,11 @@ public partial class ApiDbContext : DbContext
             entity.HasOne(d => d.Semester).WithMany(p => p.Groups)
                 .HasForeignKey(d => d.SemesterId)
                 .HasConstraintName("group_fk_semester");
+
+            entity.HasMany(e => e.TeacherGroups)
+                .WithOne(e => e.Group)
+                .HasForeignKey(e => e.GroupId)
+                .HasConstraintName("teacher_group_fk_group");
 
             entity.HasMany(d => d.Disciplines).WithMany(p => p.Groups)
                 .UsingEntity<Dictionary<string, object>>(
@@ -186,8 +215,9 @@ public partial class ApiDbContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Value).HasColumnName("value");
 
-            entity.HasData(new() { Id = 1, Value = 5 }, new() { Id = 2, Value = 4 }, new() { Id = 3, Value = 3 },
-                new() { Id = 4, Value = 2 });
+            entity.HasData(new Mark { Id = 1, Value = 5 }, new Mark { Id = 2, Value = 4 },
+                new Mark { Id = 3, Value = 3 },
+                new Mark { Id = 4, Value = 2 });
         });
 
         modelBuilder.Entity<Semester>(entity =>
@@ -200,7 +230,7 @@ public partial class ApiDbContext : DbContext
                 .HasDefaultValueSql("nextval('\"Semesters_id_seq\"'::regclass)")
                 .HasColumnName("id");
 
-            entity.HasData(new() { Id = 1 }, new() { Id = 2 });
+            entity.HasData(new Semester { Id = 1 }, new Semester { Id = 2 });
         });
 
         modelBuilder.Entity<Student>(entity =>
@@ -227,6 +257,14 @@ public partial class ApiDbContext : DbContext
                 .HasConstraintName("student_fk_user");
         });
 
+        modelBuilder.Entity<CompletedWorkTask>(entity =>
+        {
+            entity.HasKey("TaskId", "CompletedWorkId").HasName("completed_work_task_pkey");
+            entity.ToTable("completed_work_task");
+            entity.Property(e => e.TaskId).HasColumnName("task_id");
+            entity.Property(e => e.CompletedWorkId).HasColumnName("completed_work_id");
+        });
+
         modelBuilder.Entity<Task>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("task_pkey");
@@ -246,22 +284,18 @@ public partial class ApiDbContext : DbContext
                 .HasForeignKey(d => d.WorkId)
                 .HasConstraintName("task_fk_work");
 
-            entity.HasMany(d => d.CompletedWorks).WithMany(p => p.Tasks)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CompletedWorkTask",
-                    r => r.HasOne<CompletedWork>().WithMany()
-                        .HasForeignKey("CompletedWorkId")
-                        .HasConstraintName("completed_work_task_fk_completed_work"),
-                    l => l.HasOne<Task>().WithMany()
-                        .HasForeignKey("TaskId")
-                        .HasConstraintName("completed_work_task_fk_task"),
-                    j =>
-                    {
-                        j.HasKey("TaskId", "CompletedWorkId").HasName("completed_work_task_pkey");
-                        j.ToTable("completed_work_task");
-                        j.IndexerProperty<int>("TaskId").HasColumnName("task_id");
-                        j.IndexerProperty<int>("CompletedWorkId").HasColumnName("completed_work_id");
-                    });
+            entity.HasMany(e => e.CompletedWorkTasks)
+                .WithOne(e => e.Task)
+                .HasForeignKey(e => e.TaskId)
+                .HasConstraintName("completed_work_task_fk_task");
+        });
+
+        modelBuilder.Entity<TeacherGroup>(entity =>
+        {
+            entity.HasKey("TeacherId", "GroupId").HasName("teacher_group_pkey");
+            entity.ToTable("teacher_group");
+            entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
+            entity.Property(e => e.GroupId).HasColumnName("group_id");
         });
 
         modelBuilder.Entity<Teacher>(entity =>
@@ -279,22 +313,10 @@ public partial class ApiDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("teacher_fk_user");
 
-            entity.HasMany(d => d.Groups).WithMany(p => p.Teachers)
-                .UsingEntity<Dictionary<string, object>>(
-                    "TeacherGroup",
-                    r => r.HasOne<Group>().WithMany()
-                        .HasForeignKey("GroupId")
-                        .HasConstraintName("teacher_group_fk_group"),
-                    l => l.HasOne<Teacher>().WithMany()
-                        .HasForeignKey("TeacherId")
-                        .HasConstraintName("teacher_group_fk_teacher"),
-                    j =>
-                    {
-                        j.HasKey("TeacherId", "GroupId").HasName("teacher_group_pkey");
-                        j.ToTable("teacher_group");
-                        j.IndexerProperty<int>("TeacherId").HasColumnName("teacher_id");
-                        j.IndexerProperty<int>("GroupId").HasColumnName("group_id");
-                    });
+            entity.HasMany(e => e.TeacherGroups)
+                .WithOne(e => e.Teacher)
+                .HasForeignKey(e => e.TeacherId)
+                .HasConstraintName("teacher_group_fk_teacher");
         });
 
         modelBuilder.Entity<User>(entity =>

@@ -1,4 +1,10 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.Courses;
+using Api.Models.Disciplines;
+using Api.Models.Groups;
+using Api.Models.Semesters;
+using Api.Models.Works;
+
+namespace Api.Models.GroupWorks;
 
 public class GroupWork
 {

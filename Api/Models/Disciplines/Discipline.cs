@@ -1,4 +1,7 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.Groups;
+using Api.Models.GroupWorks;
+
+namespace Api.Models.Disciplines;
 
 public class Discipline
 {

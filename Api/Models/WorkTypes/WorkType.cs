@@ -1,4 +1,6 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.Works;
+
+namespace Api.Models.WorkTypes;
 
 public class WorkType
 {

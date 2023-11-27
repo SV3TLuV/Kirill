@@ -1,7 +1,7 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
+using Api.Models.Marks;
 
-namespace Api.Models;
+namespace Api.Models.WorkMarks;
 
 public sealed class WorkMarkViewModel : IMapWith<WorkMark>
 {

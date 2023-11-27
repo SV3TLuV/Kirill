@@ -1,7 +1,9 @@
 ﻿using Api.Common.Interfaces;
-using Api.Entities;
+using Api.Models.Tasks;
+using Api.Models.WorkMarks;
+using Api.Models.WorkTypes;
 
-namespace Api.Models;
+namespace Api.Models.Works;
 
 public sealed class WorkViewModel : IMapWith<Work>
 {

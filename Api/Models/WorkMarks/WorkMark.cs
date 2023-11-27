@@ -1,4 +1,7 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.Marks;
+using Api.Models.Works;
+
+namespace Api.Models.WorkMarks;
 
 public class WorkMark
 {

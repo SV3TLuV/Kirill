@@ -22,6 +22,8 @@ void RegisterServices(IServiceCollection services)
     services.AddControllers();
     services.AddDbContext<ApiDbContext>(options =>
         options.UseNpgsql("Name=Database"));
+    services.AddAutoMapper(configuration =>
+        configuration.AddProfile(typeof(Program)));
 }
 
 void ConfigureApp(WebApplication app)

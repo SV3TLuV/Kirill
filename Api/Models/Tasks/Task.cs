@@ -1,4 +1,8 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.CompletedWorks;
+using Api.Models.CompletedWorkTasks;
+using Api.Models.Works;
+
+namespace Api.Models.Tasks;
 
 public class Task
 {
@@ -12,5 +16,5 @@ public class Task
 
     public virtual Work Work { get; set; } = null!;
 
-    public virtual ICollection<CompletedWork> CompletedWorks { get; set; } = new List<CompletedWork>();
+    public virtual ICollection<CompletedWorkTask> CompletedWorkTasks { get; set; } = new List<CompletedWorkTask>();
 }

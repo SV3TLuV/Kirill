@@ -1,4 +1,7 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.TeacherGroups;
+using Api.Models.Users;
+
+namespace Api.Models.Teachers;
 
 public class Teacher
 {
@@ -8,5 +11,5 @@ public class Teacher
 
     public virtual User User { get; set; } = null!;
 
-    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+    public virtual ICollection<TeacherGroup> TeacherGroups { get; set; } = new List<TeacherGroup>();
 }

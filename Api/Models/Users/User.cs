@@ -1,4 +1,7 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.Students;
+using Api.Models.Teachers;
+
+namespace Api.Models.Users;
 
 public class User
 {

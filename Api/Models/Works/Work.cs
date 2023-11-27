@@ -1,4 +1,10 @@
-﻿namespace Api.Entities;
+﻿using Api.Models.CompletedWorks;
+using Api.Models.GroupWorks;
+using Api.Models.WorkMarks;
+using Api.Models.WorkTypes;
+using Task = Api.Models.Tasks.Task;
+
+namespace Api.Models.Works;
 
 public class Work
 {
