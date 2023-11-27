@@ -1,5 +1,6 @@
 ﻿using Api.Models.Courses;
 using Api.Models.Disciplines;
+using Api.Models.GroupDisciplines;
 using Api.Models.GroupWorks;
 using Api.Models.Semesters;
 using Api.Models.Students;
@@ -28,7 +29,7 @@ public class Group
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 
-    public virtual ICollection<Discipline> Disciplines { get; set; } = new List<Discipline>();
+    public virtual ICollection<GroupDiscipline> GroupDisciplines { get; set; } = new List<GroupDiscipline>();
 
     public virtual ICollection<TeacherGroup> TeacherGroups { get; set; } = new List<TeacherGroup>();
 }

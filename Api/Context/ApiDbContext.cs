@@ -2,6 +2,7 @@
 using Api.Models.CompletedWorkTasks;
 using Api.Models.Courses;
 using Api.Models.Disciplines;
+using Api.Models.GroupDisciplines;
 using Api.Models.Groups;
 using Api.Models.GroupWorks;
 using Api.Models.Marks;
@@ -34,6 +35,8 @@ public partial class ApiDbContext : DbContext
     public virtual DbSet<Discipline> Disciplines { get; set; } = null!;
 
     public virtual DbSet<Group> Groups { get; set; } = null!;
+
+    public virtual DbSet<GroupDiscipline> GroupDisciplines { get; set; } = null!;
 
     public virtual DbSet<GroupWork> GroupWorks { get; set; } = null!;
 
@@ -117,6 +120,23 @@ public partial class ApiDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
+
+            entity.HasMany(e => e.GroupDisciplines)
+                .WithOne(e => e.Discipline)
+                .HasForeignKey(e => e.DisciplineId)
+                .HasConstraintName("group_discipline_fk_discipline");
+        });
+
+        modelBuilder.Entity<GroupDiscipline>(entity =>
+        {
+            entity.HasKey(e => new
+            {
+                e.GroupId,
+                e.DisciplineId
+            }).HasName("group_discipline_pkey");
+            entity.ToTable("group_discipline");
+            entity.Property(e => e.GroupId).HasColumnName("group_id");
+            entity.Property(e => e.DisciplineId).HasColumnName("discipline_id");
         });
 
         modelBuilder.Entity<Group>(entity =>
@@ -150,22 +170,10 @@ public partial class ApiDbContext : DbContext
                 .HasForeignKey(e => e.GroupId)
                 .HasConstraintName("teacher_group_fk_group");
 
-            entity.HasMany(d => d.Disciplines).WithMany(p => p.Groups)
-                .UsingEntity<Dictionary<string, object>>(
-                    "GroupDiscipline",
-                    r => r.HasOne<Discipline>().WithMany()
-                        .HasForeignKey("DisciplineId")
-                        .HasConstraintName("group_discipline_fk_discipline"),
-                    l => l.HasOne<Group>().WithMany()
-                        .HasForeignKey("GroupId")
-                        .HasConstraintName("group_discipline_fk_group"),
-                    j =>
-                    {
-                        j.HasKey("GroupId", "DisciplineId").HasName("group_discipline_pkey");
-                        j.ToTable("group_discipline");
-                        j.IndexerProperty<int>("GroupId").HasColumnName("group_id");
-                        j.IndexerProperty<int>("DisciplineId").HasColumnName("discipline_id");
-                    });
+            entity.HasMany(e => e.GroupDisciplines)
+                .WithOne(e => e.Group)
+                .HasForeignKey(e => e.GroupId)
+                .HasConstraintName("group_discipline_fk_group");
         });
 
         modelBuilder.Entity<GroupWork>(entity =>
