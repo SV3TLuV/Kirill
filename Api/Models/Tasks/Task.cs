@@ -1,5 +1,4 @@
-﻿using Api.Models.CompletedWorks;
-using Api.Models.CompletedWorkTasks;
+﻿using Api.Models.CompletedWorkTasks;
 using Api.Models.Works;
 
 namespace Api.Models.Tasks;
