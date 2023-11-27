@@ -27,4 +27,35 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\CompletedWorks\Commands\" />
+      <Folder Include="Models\CompletedWorks\Queries\" />
+      <Folder Include="Models\Courses\Commands\" />
+      <Folder Include="Models\Courses\Queries\" />
+      <Folder Include="Models\Disciplines\Commands\" />
+      <Folder Include="Models\Disciplines\Queries\" />
+      <Folder Include="Models\Groups\Commands\" />
+      <Folder Include="Models\Groups\Queries\" />
+      <Folder Include="Models\GroupWorks\Commands\" />
+      <Folder Include="Models\GroupWorks\Queries\" />
+      <Folder Include="Models\Marks\Commands\" />
+      <Folder Include="Models\Marks\Queries\" />
+      <Folder Include="Models\Semesters\Commands\" />
+      <Folder Include="Models\Semesters\Queries\" />
+      <Folder Include="Models\Students\Commands\" />
+      <Folder Include="Models\Students\Queries\" />
+      <Folder Include="Models\Tasks\Commands\" />
+      <Folder Include="Models\Tasks\Queries\" />
+      <Folder Include="Models\Teachers\Commands\" />
+      <Folder Include="Models\Teachers\Queries\" />
+      <Folder Include="Models\Users\Commands\" />
+      <Folder Include="Models\Users\Queries\" />
+      <Folder Include="Models\WorkMarks\Commands\" />
+      <Folder Include="Models\WorkMarks\Queries\" />
+      <Folder Include="Models\Works\Commands\" />
+      <Folder Include="Models\Works\Queries\" />
+      <Folder Include="Models\WorkTypes\Commands\" />
+      <Folder Include="Models\WorkTypes\Queries\" />
+    </ItemGroup>
+
 </Project>
