@@ -42,7 +42,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
             .ThenInclude(e => e.Mark)
             .Where(e => e.StudentId == id)
             .ProjectTo<CompletedWorkViewModel>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(e => e.Id == id));
+            .ToListAsync());
     }
 
     [HttpGet]

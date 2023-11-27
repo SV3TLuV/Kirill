@@ -28,7 +28,7 @@ public sealed class GroupController(IMapper mapper) : BaseController
     }
 
     [HttpGet("{id:int}/students")]
-    public async Task<ActionResult<StudentViewModel>> GetStudents(
+    public async Task<ActionResult<StudentViewModel[]>> GetStudents(
         int id,
         [FromServices] ApiDbContext context)
     {
@@ -39,7 +39,7 @@ public sealed class GroupController(IMapper mapper) : BaseController
             .Where(e => e.GroupId == id)
             .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
             .OrderBy(e => e.IsRetired)
-            .FirstOrDefaultAsync(e => e.Id == id));
+            .ToListAsync());
     }
 
     [HttpGet]

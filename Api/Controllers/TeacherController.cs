@@ -35,6 +35,10 @@ public sealed class TeacherController(IMapper mapper) : BaseController
         var groupsQuery = context.Groups
             .Include(e => e.Course)
             .Include(e => e.Semester)
+            .Include(e => e.TeacherGroups)
+            .Where(e => e.TeacherGroups
+                .Select(e => e.TeacherId)
+                .Contains(id))
             .AsNoTracking();
 
         if (query.CourseId is not null)
@@ -49,7 +53,7 @@ public sealed class TeacherController(IMapper mapper) : BaseController
 
         return Ok(await groupsQuery
             .ProjectTo<GroupViewModel>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(e => e.Id == id));
+            .ToListAsync());
     }
 
     [HttpGet]
