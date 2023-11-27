@@ -10,3 +10,4 @@ namespace Api.Controllers;
 public abstract class BaseController : ControllerBase
 {
 }
+
