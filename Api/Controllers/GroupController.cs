@@ -51,6 +51,7 @@ public sealed class GroupController(IMapper mapper) : BaseController
             .Include(e => e.Course)
             .Include(e => e.Semester)
             .Include(e => e.GroupDisciplines)
+            .ThenInclude(e => e.Discipline)
             .ProjectTo<GroupViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
     }

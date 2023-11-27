@@ -21,7 +21,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
             .Include(e => e.User)
             .Include(e => e.Group)
             .AsNoTracking()
-            .ProjectTo<CourseViewModel>(mapper.ConfigurationProvider)
+            .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(e => e.Id == id));
     }
 
@@ -53,7 +53,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
             .Include(e => e.User)
             .Include(e => e.Group)
             .AsNoTracking()
-            .ProjectTo<CourseViewModel>(mapper.ConfigurationProvider)
+            .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
     }
 
