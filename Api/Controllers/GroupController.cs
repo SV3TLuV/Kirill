@@ -64,6 +64,7 @@ public sealed class GroupController(IMapper mapper) : BaseController
         var group = mapper.Map<Group>(command);
 
         await context.AddAsync(group);
+        await context.SaveChangesAsync();
 
         if (command.DisciplineIds is not null)
         {

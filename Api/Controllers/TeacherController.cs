@@ -75,7 +75,8 @@ public sealed class TeacherController(IMapper mapper) : BaseController
         var teacher = mapper.Map<Teacher>(command);
 
         await context.AddAsync(teacher);
-
+        await context.SaveChangesAsync();
+        
         if (command.GroupIds is not null)
         {
             var teacherGroups = command.GroupIds
