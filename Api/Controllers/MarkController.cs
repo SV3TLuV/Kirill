@@ -15,6 +15,7 @@ public sealed class MarkController(IMapper mapper) : BaseController
     {
         return Ok(await context.Marks
             .AsNoTracking()
+            .OrderBy(e => e.Id)
             .ProjectTo<MarkViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
     }

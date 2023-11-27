@@ -16,6 +16,7 @@ public sealed class CourseController(IMapper mapper) : BaseController
     {
         return Ok(await context.Courses
             .AsNoTracking()
+            .OrderBy(e => e.Id)
             .ProjectTo<CourseViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
     }
