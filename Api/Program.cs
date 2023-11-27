@@ -1,4 +1,5 @@
 using Api.Common;
+using Api.Common.Mappings;
 using Api.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ void RegisterServices(IServiceCollection services)
     services.AddDbContext<ApiDbContext>(options =>
         options.UseNpgsql("Name=Database"));
     services.AddAutoMapper(configuration =>
-        configuration.AddProfile(typeof(Program)));
+        configuration.AddProfile(new AssemblyMappingProfile(typeof(Program).Assembly)));
 }
 
 void ConfigureApp(WebApplication app)
