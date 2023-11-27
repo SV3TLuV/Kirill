@@ -1,9 +1,11 @@
 using Api.Context;
-using Api.Models;
+using Api.Models.Disciplines;
 using Api.Models.GroupDisciplines;
 using Api.Models.Groups;
 using Api.Models.Groups.Commands;
+using Api.Models.Groups.Queries;
 using Api.Models.Students;
+using Api.Models.Works;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +41,50 @@ public sealed class GroupController(IMapper mapper) : BaseController
             .Where(e => e.GroupId == id)
             .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
             .OrderBy(e => e.IsRetired)
+            .ToListAsync());
+    }
+
+    [HttpGet("{id:int}/disciplines")]
+    public async Task<ActionResult<DisciplineViewModel[]>> GetDisciplines(
+        int id,
+        [FromServices] ApiDbContext context)
+    {
+        return Ok(await context.GroupDisciplines
+            .AsNoTracking()
+            .Include(e => e.Discipline)
+            .Where(e => e.GroupId == id)
+            .Select(e => e.Discipline)
+            .ProjectTo<DisciplineViewModel>(mapper.ConfigurationProvider)
+            .ToListAsync());
+    }
+
+    [HttpGet("{id:int}/works")]
+    public async Task<ActionResult<WorkViewModel[]>> GetWorks(
+        int id,
+        [FromQuery] GetGroupWorksQuery query,
+        [FromServices] ApiDbContext context)
+    {
+        var worksQuery = context.GroupWorks
+            .Include(e => e.Group)
+            .Include(e => e.Work)
+            .ThenInclude(e => e.WorkType)
+            .Include(e => e.Work)
+            .ThenInclude(e => e.WorkMarks)
+            .ThenInclude(e => e.Mark)
+            .Include(e => e.Work)
+            .ThenInclude(e => e.Tasks)
+            .Where(e => e.GroupId == id)
+            .Where(e => e.CourseId == e.Group.CourseId)
+            .Where(e => e.SemesterId == e.Group.SemesterId)
+            .AsNoTracking();
+
+        if (query.DisciplineId is not null)
+        {
+            worksQuery = worksQuery.Where(e => e.DisciplineId == query.DisciplineId);
+        }
+
+        return Ok(await worksQuery
+            .ProjectTo<WorkViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
     }
 

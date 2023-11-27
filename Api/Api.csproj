@@ -31,7 +31,6 @@
       <Folder Include="Models\CompletedWorks\Commands\" />
       <Folder Include="Models\CompletedWorks\Queries\" />
       <Folder Include="Models\Disciplines\Queries\" />
-      <Folder Include="Models\Groups\Queries\" />
       <Folder Include="Models\GroupWorks\Commands\" />
       <Folder Include="Models\GroupWorks\Queries\" />
       <Folder Include="Models\Students\Queries\" />
