@@ -1,6 +1,7 @@
 using Api.Context;
-using Api.Models;
+using Api.Models.WorkMarks;
 using Api.Models.Works;
+using Api.Models.Works.Commands;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,58 @@ public sealed class WorkController(IMapper mapper) : BaseController
             .ThenInclude(e => e.Mark)
             .ProjectTo<WorkViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
+    }
+    
+    [HttpPost]
+    public async Task<ActionResult> Post(
+        [FromBody] CreateWorkCommand command,
+        [FromServices] ApiDbContext context)
+    {
+        var work = mapper.Map<Work>(command);
+
+        await context.Works.AddAsync(work);
+        await context.SaveChangesAsync();
+        
+        return Created(string.Empty, work.Id);
+    }
+
+    [HttpPut("{id: int}")]
+    public async Task<ActionResult> Put(
+        int id,
+        [FromBody] UpdateWorkCommand command,
+        [FromServices] ApiDbContext context)
+    {
+        var work = await context.Works
+            .Where(e => e.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (work is null)
+        {
+            return NotFound();
+        }
+
+        if (command.WorkMarks is not null)
+        {
+            await context.WorkMarks
+                .Where(e => e.WorkId == id)
+                .AsNoTracking()
+                .ExecuteDeleteAsync();
+
+            var workMarks = mapper.Map<ICollection<WorkMark>>(command.WorkMarks);
+                
+            foreach (var workMark in workMarks)
+            {
+                workMark.WorkId = id;
+            }
+
+            await context.AddRangeAsync(workMarks);
+        }
+
+        work.Name = command.Name;
+        work.WorkTypeId = command.WorkTypeId;
+
+        await context.SaveChangesAsync();
+
+        return Ok();
     }
 }

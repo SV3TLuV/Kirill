@@ -18,7 +18,7 @@ public class Work
 
     public virtual ICollection<GroupWork> GroupWorks { get; set; } = new List<GroupWork>();
 
-    public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
+    public virtual ICollection<Task>? Tasks { get; set; } = new List<Task>();
 
     public virtual ICollection<WorkMark> WorkMarks { get; set; } = new List<WorkMark>();
 
