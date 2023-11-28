@@ -7,11 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 RegisterServices(builder.Services);
 
 var application = builder.Build();
-ConfigureApp(application);
 
 await using var scope = application.Services.CreateAsyncScope();
 await using var context = scope.ServiceProvider.GetRequiredService<ApiDbContext>();
 await context.Database.EnsureCreatedAsync();
+
+ConfigureApp(application);
 
 await application.RunAsync();
 
