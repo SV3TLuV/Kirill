@@ -29,11 +29,8 @@ void RegisterServices(IServiceCollection services)
 
 void ConfigureApp(WebApplication app)
 {
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.UseRouting();
     app.UseCors(Constants.CorsName);
