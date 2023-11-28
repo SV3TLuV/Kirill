@@ -115,7 +115,7 @@ public partial class ApiDbContext : DbContext
             entity.HasIndex(e => e.Name, "discipline_unique_name").IsUnique();
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"Disciplines_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"Discipline_id_seq\"'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
@@ -148,7 +148,7 @@ public partial class ApiDbContext : DbContext
             entity.HasIndex(e => new { e.Name, e.Year }, "group_unique_name_year").IsUnique();
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"Groups_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"Group_id_seq\"'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.CourseId).HasColumnName("course_id");
             entity.Property(e => e.Name)
@@ -235,7 +235,7 @@ public partial class ApiDbContext : DbContext
             entity.ToTable("semester");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"Semesters_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"Semester_id_seq\"'::regclass)")
                 .HasColumnName("id");
 
             entity.HasData(new Semester { Id = 1 }, new Semester { Id = 2 });
@@ -248,7 +248,7 @@ public partial class ApiDbContext : DbContext
             entity.ToTable("student");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"Students_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"Student_id_seq\"'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.GroupId).HasColumnName("group_id");
             entity.Property(e => e.IsRetired)
@@ -313,7 +313,7 @@ public partial class ApiDbContext : DbContext
             entity.ToTable("teacher");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"Teachers_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"Teacher_id_seq\"'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -336,7 +336,7 @@ public partial class ApiDbContext : DbContext
             entity.HasIndex(e => e.Login, "user_unique_login").IsUnique();
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"Users_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"User_id_seq\"'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.Login)
                 .HasMaxLength(50)
