@@ -38,7 +38,7 @@ public sealed class WorkController(IMapper mapper) : BaseController
         return Created(string.Empty, work.Id);
     }
 
-    [HttpPut("{id: int}")]
+    [HttpPut("{id:int}")]
     public async Task<ActionResult> Put(
         int id,
         [FromBody] UpdateWorkCommand command,
