@@ -13,7 +13,7 @@ public sealed class CompletedWorkViewModel : IMapWith<CompletedWork>
 
     public int Percentage { get; set; }
 
-    public MarkViewModel Mark { get; set; } = null!;
+    public MarkViewModel? Mark { get; set; }
 
     public StudentViewModel Student { get; set; } = null!;
 
@@ -25,7 +25,7 @@ public sealed class CompletedWorkViewModel : IMapWith<CompletedWork>
     {
         profile.CreateMap<CompletedWork, CompletedWorkViewModel>()
             .ForMember(e => e.Tasks, expression =>
-                expression.MapFrom(e => e.CompletedWorkTasks
+                expression.MapFrom(e => e.CompletedTasks
                     .Select(e => e.Task)));
     }
 }

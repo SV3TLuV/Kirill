@@ -1,5 +1,4 @@
 ﻿using Api.Common;
-using Api.Models.WorkTypes.Commands;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 

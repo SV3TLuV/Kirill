@@ -1,4 +1,5 @@
 ﻿using Api.Common.Interfaces;
+using Api.Models.Roles;
 
 namespace Api.Models.Users;
 
@@ -13,4 +14,6 @@ public sealed class UserViewModel : IMapWith<User>
     public string Surname { get; set; } = null!;
 
     public string Patronymic { get; set; } = null!;
+
+    public RoleViewModel Role { get; set; } = null!;
 }

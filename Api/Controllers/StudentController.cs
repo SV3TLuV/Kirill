@@ -1,6 +1,5 @@
 ﻿using Api.Context;
 using Api.Models.CompletedWorks;
-using Api.Models.Courses;
 using Api.Models.Students;
 using Api.Models.Students.Commands;
 using AutoMapper;
@@ -19,6 +18,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
     {
         return Ok(await context.Students
             .Include(e => e.User)
+            .ThenInclude(e => e.Role)
             .Include(e => e.Group)
             .AsNoTracking()
             .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
@@ -51,6 +51,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
     {
         return Ok(await context.Students
             .Include(e => e.User)
+            .ThenInclude(e => e.Role)
             .Include(e => e.Group)
             .AsNoTracking()
             .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
@@ -63,6 +64,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
         [FromServices] ApiDbContext context)
     {
         var student = mapper.Map<Student>(command);
+        student.User.RoleId = 1;
 
         await context.AddAsync(student);
         await context.SaveChangesAsync();

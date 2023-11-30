@@ -6,6 +6,7 @@ using Api.Models.GroupDisciplines;
 using Api.Models.Groups;
 using Api.Models.GroupWorks;
 using Api.Models.Marks;
+using Api.Models.Roles;
 using Api.Models.Semesters;
 using Api.Models.Sessions;
 using Api.Models.Students;
@@ -55,6 +56,8 @@ public partial class ApiDbContext : DbContext
 
     public virtual DbSet<TeacherGroup> TeacherGroups { get; set; } = null!;
 
+    public virtual DbSet<Role> Roles { get; set; } = null!;
+
     public virtual DbSet<User> Users { get; set; } = null!;
 
     public virtual DbSet<Work> Works { get; set; } = null!;
@@ -79,6 +82,7 @@ public partial class ApiDbContext : DbContext
 
             entity.HasOne(d => d.Mark).WithMany(p => p.CompletedWorks)
                 .HasForeignKey(d => d.MarkId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("completed_work_fk_mark");
 
             entity.HasOne(d => d.Student).WithMany(p => p.CompletedWorks)
@@ -89,7 +93,7 @@ public partial class ApiDbContext : DbContext
                 .HasForeignKey(d => d.WorkId)
                 .HasConstraintName("completed_work_fk_work");
 
-            entity.HasMany(e => e.CompletedWorkTasks)
+            entity.HasMany(e => e.CompletedTasks)
                 .WithOne(e => e.CompletedWork)
                 .HasForeignKey(e => e.CompletedWorkId)
                 .HasConstraintName("completed_work_task_fk_completed_work");
@@ -330,6 +334,18 @@ public partial class ApiDbContext : DbContext
                 .HasConstraintName("teacher_group_fk_teacher");
         });
 
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("role_pkey");
+
+            entity.ToTable("role");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasColumnName("name");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("user_pkey");
@@ -339,7 +355,7 @@ public partial class ApiDbContext : DbContext
             entity.HasIndex(e => e.Login, "user_unique_login").IsUnique();
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('\"User_id_seq\"'::regclass)")
+                .HasDefaultValueSql("nextval('\"Users_id_seq\"'::regclass)")
                 .HasColumnName("id");
             entity.Property(e => e.Login)
                 .HasMaxLength(50)
@@ -353,9 +369,15 @@ public partial class ApiDbContext : DbContext
             entity.Property(e => e.Patronymic)
                 .HasMaxLength(100)
                 .HasColumnName("patronymic");
+            entity.Property(e => e.RoleId).HasColumnName("role_id");
             entity.Property(e => e.Surname)
                 .HasMaxLength(100)
                 .HasColumnName("surname");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("user_fk_role");
         });
 
         modelBuilder.Entity<Session>(entity =>

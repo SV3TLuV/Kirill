@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1 (Debian 16.1-1.pgdg120+1)
 -- Dumped by pg_dump version 16.0
 
--- Started on 2023-11-30 20:38:33
+-- Started on 2023-11-30 21:06:47
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -403,7 +403,7 @@ ALTER SEQUENCE public."WorkType_id_seq" OWNED BY public.work_type.id;
 CREATE TABLE public.completed_work (
     id integer NOT NULL,
     percentage integer NOT NULL,
-    mark_id integer NOT NULL,
+    mark_id integer,
     work_id integer NOT NULL,
     student_id integer NOT NULL
 );
@@ -1556,7 +1556,7 @@ ALTER TABLE ONLY public.work_mark
     ADD CONSTRAINT work_mark_fk_work FOREIGN KEY (work_id) REFERENCES public.work(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
--- Completed on 2023-11-30 20:38:33
+-- Completed on 2023-11-30 21:06:47
 
 --
 -- PostgreSQL database dump complete

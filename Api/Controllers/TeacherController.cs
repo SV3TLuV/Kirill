@@ -22,6 +22,7 @@ public sealed class TeacherController(IMapper mapper) : BaseController
         return Ok(await context.Teachers
             .AsNoTracking()
             .Include(e => e.User)
+            .ThenInclude(e => e.Role)
             .ProjectTo<TeacherViewModel>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(e => e.Id == id));
     }
@@ -63,6 +64,7 @@ public sealed class TeacherController(IMapper mapper) : BaseController
         return Ok(await context.Teachers
             .AsNoTracking()
             .Include(e => e.User)
+            .ThenInclude(e => e.Role)
             .ProjectTo<TeacherViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
     }
@@ -73,6 +75,7 @@ public sealed class TeacherController(IMapper mapper) : BaseController
         [FromServices] ApiDbContext context)
     {
         var teacher = mapper.Map<Teacher>(command);
+        teacher.User.RoleId = 2;
 
         await context.AddAsync(teacher);
         await context.SaveChangesAsync();

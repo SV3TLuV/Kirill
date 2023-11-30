@@ -20,6 +20,7 @@ public sealed class UserController : BaseController
     {
         var user = await context.Users
             .AsNoTracking()
+            .Include(e => e.Role)
             .FirstOrDefaultAsync(e => e.Id == id);
 
         if (user is null)
@@ -47,6 +48,7 @@ public sealed class UserController : BaseController
     {
         var user = await context.Set<User>()
             .AsNoTracking()
+            .Include(e => e.Role)
             .FirstOrDefaultAsync(e => e.Login == command.Login);
 
         if (user is null)
@@ -85,6 +87,7 @@ public sealed class UserController : BaseController
 
         var session = await context.Set<Session>()
             .Include(e => e.User)
+            .ThenInclude(e => e.Role)
             .FirstOrDefaultAsync(e => e.Id == sessionId);
 
         if (session is null)
