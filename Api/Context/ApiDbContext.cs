@@ -7,6 +7,7 @@ using Api.Models.Groups;
 using Api.Models.GroupWorks;
 using Api.Models.Marks;
 using Api.Models.Semesters;
+using Api.Models.Sessions;
 using Api.Models.Students;
 using Api.Models.TeacherGroups;
 using Api.Models.Teachers;
@@ -45,6 +46,8 @@ public partial class ApiDbContext : DbContext
     public virtual DbSet<Semester> Semesters { get; set; } = null!;
 
     public virtual DbSet<Student> Students { get; set; } = null!;
+
+    public virtual DbSet<Session> Sessions { get; set; } = null!;
 
     public virtual DbSet<Task> Tasks { get; set; } = null!;
 
@@ -353,6 +356,26 @@ public partial class ApiDbContext : DbContext
             entity.Property(e => e.Surname)
                 .HasMaxLength(100)
                 .HasColumnName("surname");
+        });
+
+        modelBuilder.Entity<Session>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("session_pkey");
+
+            entity.ToTable("session");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.RefreshToken)
+                .HasMaxLength(4096)
+                .HasColumnName("refresh_token");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Sessions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("session_fk_user");
         });
 
         modelBuilder.Entity<Work>(entity =>

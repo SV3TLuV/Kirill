@@ -1,12 +1,11 @@
-﻿using Api.Models.Students;
+﻿using Api.Models.Sessions;
+using Api.Models.Students;
 using Api.Models.Teachers;
 
 namespace Api.Models.Users;
 
 public class User
 {
-    public int Id { get; set; }
-
     public string Login { get; set; } = null!;
 
     public string Password { get; set; } = null!;
@@ -16,6 +15,10 @@ public class User
     public string Surname { get; set; } = null!;
 
     public string Patronymic { get; set; } = null!;
+
+    public int Id { get; set; }
+
+    public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 

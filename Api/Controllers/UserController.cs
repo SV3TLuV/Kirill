@@ -1,5 +1,10 @@
-﻿using Api.Context;
+﻿using System.Security.Claims;
+using Api.Common.Interfaces;
+using Api.Context;
+using Api.Models.Sessions;
+using Api.Models.Users;
 using Api.Models.Users.Commands;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,16 +39,73 @@ public sealed class UserController : BaseController
     }
 
     [HttpPost("/login")]
-    public async Task<ActionResult> Login(
-        [FromServices] ApiDbContext context)
+    public async Task<ActionResult<AuthorizationResultViewModel>> Login(
+        [FromBody] LoginCommand command,
+        [FromServices] IMapper mapper,
+        [FromServices] ApiDbContext context,
+        [FromServices] ITokenService tokenService)
     {
-        throw new NotImplementedException();
+        var user = await context.Set<User>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Login == command.Login);
+
+        if (user is null)
+            return BadRequest("Incorrect login or password.");
+
+        var session = new Session
+        {
+            Id = Guid.NewGuid(),
+            RefreshToken = tokenService.GenerateRefreshToken(),
+            UserId = user.Id
+        };
+
+        var userViewModel = mapper.Map<UserViewModel>(user);
+        var accessToken = tokenService.GenerateAccessToken(user, session.Id);
+
+        return Ok(new AuthorizationResultViewModel
+        {
+            AccessToken = accessToken,
+            RefreshToken = session.RefreshToken,
+            User = userViewModel
+        });
     }
 
     [HttpPost("/refresh")]
-    public async Task<ActionResult> Refresh(
-        [FromServices] ApiDbContext context)
+    public async Task<ActionResult<AuthorizationResultViewModel>> Refresh(
+        [FromBody] RefreshCommand command,
+        [FromServices] IMapper mapper,
+        [FromServices] ApiDbContext context,
+        [FromServices] ITokenService tokenService)
     {
-        throw new NotImplementedException();
+        var principal = tokenService.GetPrincipalFromExpiredToken(command.AccessToken);
+        var sidClaim = principal.FindFirst(ClaimTypes.Sid);
+
+        if (sidClaim is null || !Guid.TryParse(sidClaim.Value, out var sessionId))
+           return BadRequest("Invalid AccessToken.");
+
+        var session = await context.Set<Session>()
+            .Include(e => e.User)
+            .FirstOrDefaultAsync(e => e.Id == sessionId);
+
+        if (session is null)
+            return NotFound($"Sessions with id: {sessionId}");
+
+        if (session.RefreshToken != command.RefreshToken)
+            return NotFound("Invalid RefreshToken");
+
+        session.RefreshToken = tokenService.GenerateRefreshToken();
+
+        context.Update(session);
+        await context.SaveChangesAsync();
+
+        var userViewModel = mapper.Map<UserViewModel>(session.User);
+        var accessToken = tokenService.GenerateAccessToken(session.User, session.Id);
+
+        return Ok(new AuthorizationResultViewModel
+        {
+            AccessToken = accessToken,
+            RefreshToken = session.RefreshToken,
+            User = userViewModel
+        });
     }
 }
