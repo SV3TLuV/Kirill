@@ -77,4 +77,24 @@ public sealed class WorkController(IMapper mapper) : BaseController
 
         return Ok();
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> Delete(
+        int id,
+        [FromServices] ApiDbContext context)
+    {
+        var work = await context.Works
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (work is null)
+        {
+            return NotFound();
+        }
+
+        context.Remove(work);
+        await context.SaveChangesAsync();
+
+        return Ok();
+    }
 }
