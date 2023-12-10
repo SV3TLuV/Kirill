@@ -39,7 +39,7 @@ public sealed class UserController : BaseController
         return Ok();
     }
 
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<ActionResult<AuthorizationResultViewModel>> Login(
         [FromBody] LoginCommand command,
         [FromServices] IMapper mapper,
@@ -72,7 +72,7 @@ public sealed class UserController : BaseController
         });
     }
 
-    [HttpPost("/refresh")]
+    [HttpPost("refresh")]
     public async Task<ActionResult<AuthorizationResultViewModel>> Refresh(
         [FromBody] RefreshCommand command,
         [FromServices] IMapper mapper,
