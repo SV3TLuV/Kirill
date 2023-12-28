@@ -4,6 +4,7 @@ using Api.Models.Students;
 using Api.Models.Students.Commands;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,6 +57,74 @@ public sealed class StudentController(IMapper mapper) : BaseController
             .AsNoTracking()
             .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
             .ToListAsync());
+    }
+
+    [HttpGet]
+    public async Task<IResult> GetXlsx(
+        [FromServices] ApiDbContext context)
+    {
+        const string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        const string fileName = "students.xlsx";
+
+        using var book = new XLWorkbook();
+
+        await using var memory = new MemoryStream();
+        var students = await context.Students
+            .Include(e => e.Group)
+            .Include(e => e.User)
+            .OrderByDescending(e => e.IsRetired)
+            .AsNoTracking()
+            .ProjectTo<StudentViewModel>(mapper.ConfigurationProvider)
+            .ToArrayAsync();
+
+        book.AddWorksheet("Students");
+        var worksheet = book.Worksheets.Last();
+
+        worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        worksheet.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+        worksheet.Style.Border.OutsideBorder = XLBorderStyleValues.None;
+        worksheet.Style.Alignment.WrapText = true;
+        worksheet.Style.Font.FontSize = 16;
+        worksheet.ColumnWidth = 60;
+
+        worksheet.Cell("A1").Value = "Логин";
+        worksheet.Cell("B1").Value = "Имя";
+        worksheet.Cell("C1").Value = "Фамилия";
+        worksheet.Cell("D1").Value = "Отчество";
+        worksheet.Cell("E1").Value = "Группа";
+        worksheet.Cell("F1").Value = "Отчислен";
+
+        var row = 2;
+
+        foreach (var student in students)
+        {
+            var range = worksheet.Range(row, 1, row, 6);
+
+            var cell = range.FirstCell();
+            cell.Value = student.User.Login;
+
+            cell = cell.CellRight();
+            cell.Value = student.User.Name;
+
+            cell = cell.CellRight();
+            cell.Value = student.User.Surname;
+
+            cell = cell.CellRight();
+            cell.Value = student.User.Patronymic;
+
+            cell = cell.CellRight();
+            cell.Value = student.Group.Name;
+
+            cell = cell.CellRight();
+            cell.Value = student.IsRetired;
+
+            row++;
+        }
+
+        book.SaveAs(memory);
+        var content = memory.ToArray();
+
+        return Results.File(content, contentType, fileName);
     }
 
     [HttpPost]
