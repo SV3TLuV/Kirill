@@ -59,7 +59,7 @@ public sealed class StudentController(IMapper mapper) : BaseController
             .ToListAsync());
     }
 
-    [HttpGet]
+    [HttpGet("xlsx")]
     public async Task<IResult> GetXlsx(
         [FromServices] ApiDbContext context)
     {
